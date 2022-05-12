@@ -1,7 +1,9 @@
 # Golang Best practice
 
 
-|tech|project|description|
+|project|example|description|
 |:---|:---|:---|
-|Echo|graceful shutdown||
+|echo-gracefullshutdown|graceful shutdown||
 |regexp| regular expression||
+|generic| golang generic||
+|log| logging||
