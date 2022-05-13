@@ -7,3 +7,4 @@
 |regexp| regular expression||
 |generic| golang generic||
 |log| logging||
+|viper| for config ||
