@@ -9,3 +9,5 @@
 |log| logging||
 |viper| for config ||
 |cobra| for command ||
+|resty| for curl ||
+|windows-service| windows service templete ||
