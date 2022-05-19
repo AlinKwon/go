@@ -5,6 +5,7 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"alin/resty/internal/method"
 	"fmt"
 	"strings"
 
@@ -26,6 +27,9 @@ to quickly create a Cobra application.`,
 		httpProto, _ := cmd.Flags().GetString("method")
 		switch {
 		case strings.EqualFold(httpProto, "GET"):
+			fmt.Println("GET method")
+			method.Get("http://localhost")
+		case strings.EqualFold(httpProto, "POST"):
 			fmt.Println("GET method")
 		default:
 			fmt.Println("Empty protocol")

@@ -1,4 +1,4 @@
-# Golang Best practice
+# Golang example
 
 
 |project|example|description|
