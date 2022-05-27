@@ -5,11 +5,11 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	service "alin/window-service/internal"
-	"fmt"
 	"strings"
+	service "alin/window-service/internal"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	"golang.org/x/sys/windows/svc"
 )
 
@@ -20,19 +20,18 @@ var continueCmd = &cobra.Command{
 	Long: `continue
 	bla bla`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("continue called")
+		logger.Info("continue called")
 		name, _ := cmd.Flags().GetString("name")
 		if len(strings.TrimSpace(name)) > 0 {
 			service.ControlService(name, svc.Continue, svc.Running)
 		} else {
-			service.ControlService("default service name", svc.Continue, svc.Running)
+			service.ControlService(viper.GetString("name"), svc.Continue, svc.Running)
 		}
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(continueCmd)
-
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command

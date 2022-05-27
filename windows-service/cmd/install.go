@@ -5,11 +5,11 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	service "alin/window-service/internal"
-	"fmt"
 	"strings"
+	service "alin/window-service/internal"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // installCmd represents the install command
@@ -19,13 +19,14 @@ var installCmd = &cobra.Command{
 	Long: `windows service install.
 	blabla`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("install called", args)
+		logger.Info("install called", args)
 		name, _ := cmd.Flags().GetString("name")
 		desc, _ := cmd.Flags().GetString("desc")
 		if len(strings.TrimSpace(name)) > 0 {
 			service.InstallService(name, desc)
+			viper.Set("name", name)
 		} else {
-			service.InstallService("default service name", desc)
+			service.InstallService(viper.GetString("name"), desc)
 		}
 	},
 }

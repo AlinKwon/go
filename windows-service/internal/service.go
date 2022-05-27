@@ -7,7 +7,6 @@ import (
 
 	"golang.org/x/sys/windows/svc"
 	"golang.org/x/sys/windows/svc/debug"
-	"golang.org/x/sys/windows/svc/eventlog"
 )
 
 var elog debug.Log
@@ -15,8 +14,11 @@ var elog debug.Log
 type exService struct{}
 
 func (m *exService) Execute(args []string, r <-chan svc.ChangeRequest, changes chan<- svc.Status) (ssec bool, errno uint32) {
-	const cmdsAccepted = svc.AcceptStop | svc.AcceptShutdown | svc.AcceptPauseAndContinue
+	var logger = GetLogger()
+	logger.Info("service excuted")
+
 	changes <- svc.Status{State: svc.StartPending}
+	const cmdsAccepted = svc.AcceptStop | svc.AcceptShutdown | svc.AcceptPauseAndContinue
 
 	fasttick := time.Tick(500 * time.Millisecond)
 	slowtick := time.Tick(2 * time.Second)
@@ -29,7 +31,7 @@ loop:
 		select {
 		case <-tick:
 			// beep()
-			elog.Info(1, "beep")
+			logger.Info("beep")
 		case c := <-r:
 			switch c.Cmd {
 			case svc.Interrogate:
@@ -41,7 +43,7 @@ loop:
 				// golang.org/x/sys/windows/svc.TestExample is verifying this output.
 				testOutput := strings.Join(args, "-")
 				testOutput += fmt.Sprintf("-%d", c.Context)
-				elog.Info(1, testOutput)
+				logger.Info(testOutput)
 				break loop
 			case svc.Pause:
 				changes <- svc.Status{State: svc.Paused, Accepts: cmdsAccepted}
@@ -50,7 +52,7 @@ loop:
 				changes <- svc.Status{State: svc.Running, Accepts: cmdsAccepted}
 				tick = fasttick
 			default:
-				elog.Error(1, fmt.Sprintf("unexpected control request #%d", c))
+				logger.Error(1, fmt.Sprintf("unexpected control request #%d", c))
 			}
 		}
 	}
@@ -59,19 +61,12 @@ loop:
 }
 
 func RunService(name string, isDebug bool) {
-	fmt.Println(name, isDebug, "started service")
+	var logger = GetLogger()
+	logger.Info("SERVICE RUNSERVICE")
+	logger.Info(name, isDebug, "started service")
 	var err error
-	if isDebug {
-		elog = debug.New(name)
-	} else {
-		elog, err = eventlog.Open(name)
-		if err != nil {
-			return
-		}
-	}
-	defer elog.Close()
 
-	elog.Info(1, fmt.Sprintf("starting %s service", name))
+	logger.Info(1, fmt.Sprintf("starting %s service", name))
 	run := svc.Run
 	if isDebug {
 		run = debug.Run
@@ -79,8 +74,8 @@ func RunService(name string, isDebug bool) {
 
 	err = run(name, &exService{})
 	if err != nil {
-		elog.Error(1, fmt.Sprintf("%s service failed: %v", name, err))
+		logger.Error(1, fmt.Sprintf("%s service failed: %v", name, err))
 		return
 	}
-	elog.Info(1, fmt.Sprintf("%s service stopped", name))
+	logger.Info(1, fmt.Sprintf("%s service stopped", name))
 }

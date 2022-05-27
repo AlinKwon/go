@@ -5,11 +5,11 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	service "alin/window-service/internal"
-	"fmt"
 	"strings"
+	service "alin/window-service/internal"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // debugCmd represents the debug command
@@ -23,12 +23,12 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("debug called")
+		logger.Info("debug called")
 		name, _ := cmd.Flags().GetString("name")
 		if len(strings.TrimSpace(name)) > 0 {
 			service.RunService(name, true)
 		} else {
-			service.RunService("default service name", true)
+			service.RunService(viper.GetString("name"), true)
 		}
 	},
 }

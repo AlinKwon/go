@@ -5,11 +5,12 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	service "alin/window-service/internal"
 	"fmt"
 	"strings"
+	service "alin/window-service/internal"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	"golang.org/x/sys/windows/svc"
 )
 
@@ -29,7 +30,7 @@ to quickly create a Cobra application.`,
 		if len(strings.TrimSpace(name)) > 0 {
 			service.ControlService(name, svc.Pause, svc.Paused)
 		} else {
-			service.ControlService("default service name", svc.Pause, svc.Paused)
+			service.ControlService(viper.GetString("name"), svc.Pause, svc.Paused)
 		}
 	},
 }

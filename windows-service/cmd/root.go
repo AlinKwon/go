@@ -5,14 +5,13 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	service "alin/window-service/internal"
-	"log"
 	"os"
-	"strings"
+	service "alin/window-service/internal"
 
 	"github.com/spf13/cobra"
-	"golang.org/x/sys/windows/svc"
 )
+
+var logger = service.GetLogger()
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -22,18 +21,7 @@ var rootCmd = &cobra.Command{
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
-		inService, err := svc.IsWindowsService()
-		if err != nil {
-			log.Fatal(err)
-		}
-		if inService {
-			name, _ := cmd.Flags().GetString("name")
-			if len(strings.TrimSpace(name)) > 0 {
-				service.RunService(name, false)
-			} else {
-				service.RunService("default service name", false)
-			}
-		}
+		logger.Info("root command run")
 	},
 }
 
