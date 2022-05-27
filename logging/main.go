@@ -10,4 +10,7 @@ func main() {
 	interfaceLoggerMain()
 
 	rotateExpireMain()
+
+	logger := GetLogger()
+	logger.Info("hi")
 }
