@@ -60,7 +60,6 @@ func GetLogger() *zap.SugaredLogger {
 		)
 		logger := zap.New(core, zap.AddCaller(), zap.AddCallerSkip(0)) // skip : 0(current caller), 1 (current method caller)
 		singleLogger = logger.Sugar()
-		// singleLogger.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 	})
 	return singleLogger
 }
